@@ -19,11 +19,11 @@ public class Subtask extends Task {
 
         public String toString() {
             return "tasks.Subtask{" +
-                    "name='" + getName() + '\'' +
-                    ", description='" + getDescription() + '\'' +
-                    ", status='" + getStatus() + '\'' +
-                    ", id=" + getId() +
-                    ", epicId=" + getEpicId() +
+                    "name='" + name + '\'' +
+                    ", description='" + description + '\'' +
+                    ", status='" + status + '\'' +
+                    ", id=" + id +
+                    ", epicId=" + epicId +
                     '}';
         }
 }
