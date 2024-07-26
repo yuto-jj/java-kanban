@@ -46,5 +46,5 @@ public interface TaskManager {
 
     void removeEpic(int epicId);
 
-    public List<Task> getHistory();
+    List<Task> getHistory();
 }

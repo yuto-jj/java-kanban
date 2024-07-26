@@ -144,8 +144,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void epicUpdate(Epic epic) {
-        Epic newEpic = epics.get(epic.getId());
         if (epics.containsKey(epic.getId())) {
+            Epic newEpic = epics.get(epic.getId());
             newEpic.setName(epic.getName());
             newEpic.setDescription(epic.getDescription());
         }

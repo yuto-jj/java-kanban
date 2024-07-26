@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SubtaskTest {
 
-    static TaskManager taskManager = new InMemoryTaskManager();
+    TaskManager taskManager = new InMemoryTaskManager();
 
     @Test
     void addNewSubtask() {

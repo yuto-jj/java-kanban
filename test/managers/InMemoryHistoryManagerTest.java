@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryHistoryManagerTest {
 
-    static Task task;
+    Task task;
 
     @BeforeEach
     void beforeEach() {

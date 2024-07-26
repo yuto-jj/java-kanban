@@ -28,9 +28,4 @@ class TaskTest {
         assertEquals(1, tasks.size(), "Неверное количество задач.");
         assertEquals(task, tasks.get(0), "Задачи не совпадают.");
     }
-
-    @Test
-    void TheTaskShouldNotChangeAfterBeingAddedToTheManager() {
-
-    }
 }

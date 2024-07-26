@@ -1,5 +1,6 @@
 package managers;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Status;
@@ -10,13 +11,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest {
 
-    static TaskManager taskManager;
+    TaskManager taskManager;
 
-
-
+    @BeforeEach
+    void beforeEach() {
+        taskManager = new InMemoryTaskManager();
+    }
     @Test
     void shouldAddTasksOfDifferentTypes() {
-        taskManager = new InMemoryTaskManager();
         Task task = new Task("Задача - 1", "Тест задачи - 1");
         final int taskId = taskManager.addTask(task);
         Epic epic = new Epic("Эпик - 1", "Тест эпика - 1");
@@ -35,7 +37,6 @@ class InMemoryTaskManagerTest {
 
     @Test
     void theGivenIdShouldNotConflictWithTheGeneratedId() {
-        taskManager = new InMemoryTaskManager();
         int givenTaskId = 5;
         int givenEpicId = 10;
         int givenSubtaskId = 15;
