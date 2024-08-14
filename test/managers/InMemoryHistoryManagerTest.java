@@ -26,7 +26,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void shouldSavePreviousTaskVersion() {
+    void mustDeletePreviousViewSameTask() {
         TaskManager taskManager = Managers.getDefault();
         final int taskId = taskManager.addTask(task);
         taskManager.getTask(taskId);
@@ -35,7 +35,7 @@ class InMemoryHistoryManagerTest {
         taskManager.getTask(taskId);
 
         List<Task> history = taskManager.getHistory();
-        assertEquals(task, history.get(0));
-        assertEquals(task2, history.get(1));
+        assertEquals(task, history.getFirst());
+        assertEquals(task2, history.getFirst());
     }
 }
