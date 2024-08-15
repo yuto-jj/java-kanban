@@ -198,6 +198,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeEpic(int epicId) {
         if (epics.containsKey(epicId)) {
+            ArrayList<Integer> subsId = new ArrayList<>(epics.get(epicId).getSubsId());
+            for (Integer subId : subsId) {
+                subtasks.remove(subId);
+                historyManager.remove(subId);
+            }
             epics.remove(epicId);
             historyManager.remove(epicId);
         }
