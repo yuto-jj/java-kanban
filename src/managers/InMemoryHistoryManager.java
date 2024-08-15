@@ -18,13 +18,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             this.prev = prev;
             this.next = next;
         }
-
-        @Override
-        public String toString() {
-            String prevTask = (prev != null) ? prev.task.toString() : "null";
-            String nextTask = (next != null) ? next.task.toString() : "null";
-            return task.toString() + " prev: " + prevTask + " next: " + nextTask;
-        }
     }
 
     private final Map<Integer, Node> nodeMap = new HashMap<>();
@@ -42,17 +35,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         last = node;
     }
 
-    private List<Task> getTasks() {
-        List<Task> tasks = new ArrayList<>();
-        Node node = first;
-        while (node != null) {
-            tasks.add(node.task);
-            node = node.next;
-        }
-        return tasks;
-    }
-
-    public void removeNode(Node node) {
+    private void removeNode(Node node) {
         if (node.prev == null) {
             first = node.next;
             if (first != null) {
@@ -82,7 +65,13 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<Task> getHistory() {
-        return getTasks();
+        List<Task> tasks = new ArrayList<>();
+        Node node = first;
+        while (node != null) {
+            tasks.add(node.task);
+            node = node.next;
+        }
+        return tasks;
     }
 
     @Override
