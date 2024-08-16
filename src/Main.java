@@ -60,6 +60,7 @@ public class Main {
         taskManager.subtaskUpdate(subtask6);
         System.out.println(taskManager.getSubtasksByEpicId(e2));
 
+
         System.out.println(taskManager.getEpics());
 
         taskManager.removeTask(t1);
@@ -72,10 +73,18 @@ public class Main {
         Task task5 = new Task("Задача для истории", "Описание для истории");
         int t5 = taskManager.addTask(task5);
         taskManager.getTask(t5);
+        taskManager.getTask(t2);
+        printAllTasks(taskManager);
+
+        taskManager.removeTasks();
+        printAllTasks(taskManager);
+
+        taskManager.getEpic(e2);
         printAllTasks(taskManager);
 
 
     }
+
     private static void printAllTasks(TaskManager manager) {
         System.out.println("Задачи:");
         for (Task task : manager.getTasks()) {
@@ -98,5 +107,6 @@ public class Main {
         for (Task task : manager.getHistory()) {
             System.out.println(task);
         }
+        System.out.println("--------");
     }
 }

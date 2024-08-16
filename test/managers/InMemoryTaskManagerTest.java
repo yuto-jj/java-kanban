@@ -65,4 +65,39 @@ class InMemoryTaskManagerTest {
         assertEquals(description, taskManager.getTask(taskId).getDescription());
         assertEquals(status, taskManager.getTask(taskId).getStatus());
     }
+
+    @Test
+    void epicsMustNotHaveIdsOfIrrelevantSubtasks() {
+        Epic epic = new Epic("1. Эпик","Тест эпика - 1");
+        int e1 = taskManager.addEpic(epic);
+        Subtask sub1 = new Subtask("1. Подзадача", "Тест подзадачи - 1", e1);
+        int s1 = taskManager.addSubtask(sub1);
+        Subtask sub2 = new Subtask("2. Подзадача", "Тест подзадачи - 2", e1);
+        int s2 = taskManager.addSubtask(sub2);
+
+        assertEquals(2, epic.getSubsId().size());
+        assertEquals(s1, epic.getSubsId().get(0));
+        assertEquals(s2, epic.getSubsId().get(1));
+
+        taskManager.removeSubtask(s1);
+        assertEquals(1, epic.getSubsId().size());
+        assertFalse(epic.getSubsId().contains(s1));
+        assertEquals(s2, epic.getSubsId().get(0));
+    }
+
+    @Test
+    void settersShouldInfluenceTheDataInsideTheTaskManager() {
+        Task task = new Task("1. Задача", "Тест задачи - 1");
+        Task task2 = new Task("1. Задача", "Тест задачи - 1");
+        final int taskId = taskManager.addTask(task);
+        task2.setId(5);
+        task.setId(5);
+        assertEquals(task2, taskManager.getTask(taskId));
+        task.setId(6);
+        assertNotEquals(task2, taskManager.getTask(taskId));
+        task.setId(5);
+        task.setStatus(Status.DONE);
+        assertNotEquals(task2.getStatus(), taskManager.getTask(taskId).getStatus());
+
+    }
 }
