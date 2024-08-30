@@ -7,7 +7,6 @@ public class Task {
     protected String name;
     protected String description;
     protected Status status;
-    private final Type type = Type.TASK;
 
     public Task(int id, String name, String description, Status status) {
         this.id = id;
@@ -55,7 +54,7 @@ public class Task {
     }
 
     public Type getType() {
-        return type;
+        return Type.TASK;
     }
 
     @Override
