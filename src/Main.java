@@ -1,9 +1,12 @@
+import managers.FileBackedTaskManager;
 import managers.Managers;
 import managers.TaskManager;
 import tasks.Epic;
 import tasks.Status;
 import tasks.Subtask;
 import tasks.Task;
+
+import java.io.File;
 
 public class Main {
 
@@ -81,6 +84,25 @@ public class Main {
 
         taskManager.getEpic(e2);
         printAllTasks(taskManager);
+
+
+        File file = new File("resources/tasks.csv");
+
+        FileBackedTaskManager fileManager = new FileBackedTaskManager(file);
+        Task task = new Task("Первая задача", "Описание - 1");
+        fileManager.addTask(task);
+        Epic epic = new Epic("Первый эпик", "Опсание - 2");
+        int epicId = fileManager.addEpic(epic);
+        Subtask subtask = new Subtask("Первая подзадача", "Опсание - 3", epicId);
+        fileManager.addSubtask(subtask);
+
+        System.out.println("Текущая рабочая директория: " + System.getProperty("user.dir"));
+
+
+        FileBackedTaskManager fileManager2 = FileBackedTaskManager.loadFromFile(file);
+        Task task20 = new Task("Вторая задача", "Описание - 4");
+        fileManager2.addTask(task20);
+
 
 
     }
