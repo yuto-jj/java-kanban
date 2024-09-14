@@ -74,15 +74,14 @@ public class InMemoryTaskManager implements TaskManager {
                     sTime = sub.getStartTime();
                     eTime = sub.getEndTime();
                     duration = sub.getDuration();
-                    continue;
-                }
-                duration = duration.plus(sub.getDuration());
-                if (sub.getStartTime().isBefore(sTime)) {
-                    sTime = sub.getStartTime();
-                }
-
-                if (sub.getEndTime().isAfter(eTime)) {
-                    eTime = sub.getEndTime();
+                }  else {
+                    duration = duration.plus(sub.getDuration());
+                    if (sub.getStartTime().isBefore(sTime)) {
+                        sTime = sub.getStartTime();
+                    }
+                    if (sub.getEndTime().isAfter(eTime)) {
+                        eTime = sub.getEndTime();
+                    }
                 }
                 if (sub.getStatus() == Status.DONE) {
                     numberOfDone++;
