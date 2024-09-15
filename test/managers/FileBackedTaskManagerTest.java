@@ -63,18 +63,25 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
         assertEquals(task.getName(), manager.getTask(tId).getName());
         assertEquals(task.getDescription(), manager.getTask(tId).getDescription());
         assertEquals(task.getStatus(), manager.getTask(tId).getStatus());
+        assertEquals(task.getStartTime(), manager.getTask(tId).getStartTime());
+        assertEquals(task.getDuration(), manager.getTask(tId).getDuration());
 
         assertEquals(epic, manager.getEpic(eId));
         assertEquals(epic.getName(), manager.getEpic(eId).getName());
         assertEquals(epic.getDescription(), manager.getEpic(eId).getDescription());
         assertEquals(epic.getStatus(), manager.getEpic(eId).getStatus());
         assertEquals(epic.getSubsId(), manager.getEpic(eId).getSubsId());
+        assertEquals(epic.getStartTime(), manager.getEpic(eId).getStartTime());
+        assertEquals(epic.getDuration(), manager.getEpic(eId).getDuration());
+        assertEquals(epic.getEndTime(), manager.getEpic(eId).getEndTime());
 
         assertEquals(sub, manager.getSubtask(sId));
         assertEquals(sub.getName(), manager.getSubtask(sId).getName());
         assertEquals(sub.getDescription(), manager.getSubtask(sId).getDescription());
         assertEquals(sub.getStatus(), manager.getSubtask(sId).getStatus());
         assertEquals(sub.getEpicId(), manager.getSubtask(sId).getEpicId());
+        assertEquals(sub.getStartTime(), manager.getSubtask(sId).getStartTime());
+        assertEquals(sub.getDuration(), manager.getSubtask(sId).getDuration());
 
         assertDoesNotThrow(() -> FileBackedTaskManager.loadFromFile(file));
         FileBackedTaskManager secondManager = FileBackedTaskManager.loadFromFile(file);
@@ -82,17 +89,26 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
         assertEquals(manager.getTask(tId).getName(), secondManager.getTask(tId).getName());
         assertEquals(manager.getTask(tId).getDescription(), secondManager.getTask(tId).getDescription());
         assertEquals(manager.getTask(tId).getStatus(), secondManager.getTask(tId).getStatus());
+        assertEquals(manager.getTask(tId).getStartTime(), secondManager.getTask(tId).getStartTime());
+        assertEquals(manager.getTask(tId).getDuration(), secondManager.getTask(tId).getDuration());
 
         assertEquals(manager.getEpic(eId), secondManager.getEpic(eId));
         assertEquals(manager.getEpic(eId).getName(), secondManager.getEpic(eId).getName());
         assertEquals(manager.getEpic(eId).getDescription(), secondManager.getEpic(eId).getDescription());
         assertEquals(manager.getEpic(eId).getStatus(), secondManager.getEpic(eId).getStatus());
         assertEquals(manager.getEpic(eId).getSubsId(), secondManager.getEpic(eId).getSubsId());
+        assertEquals(manager.getEpic(eId).getStartTime(), secondManager.getEpic(eId).getStartTime());
+        assertEquals(manager.getEpic(eId).getDuration(), secondManager.getEpic(eId).getDuration());
+        assertEquals(manager.getEpic(eId).getEndTime(), secondManager.getEpic(eId).getEndTime());
 
         assertEquals(manager.getSubtask(sId), secondManager.getSubtask(sId));
         assertEquals(manager.getSubtask(sId).getName(), secondManager.getSubtask(sId).getName());
         assertEquals(manager.getSubtask(sId).getDescription(), secondManager.getSubtask(sId).getDescription());
         assertEquals(manager.getSubtask(sId).getStatus(), secondManager.getSubtask(sId).getStatus());
         assertEquals(manager.getSubtask(sId).getEpicId(), secondManager.getSubtask(sId).getEpicId());
+        assertEquals(manager.getSubtask(sId).getStartTime(), secondManager.getSubtask(sId).getStartTime());
+        assertEquals(manager.getSubtask(sId).getDuration(), secondManager.getSubtask(sId).getDuration());
+
+        assertEquals(manager.getPrioritizedTasks(), secondManager.getPrioritizedTasks());
     }
 }

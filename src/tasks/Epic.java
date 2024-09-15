@@ -18,6 +18,15 @@ public class Epic extends Task {
     }
 
     @Override
+    public void setStartTime(String startTime) {
+        if (startTime.equals("null")) {
+            this.startTime = null;
+        } else {
+            this.startTime = LocalDateTime.parse(startTime, DATE_TIME_FORMATTER);
+        }
+    }
+
+    @Override
     public LocalDateTime getEndTime() {
         return endTime;
     }
@@ -27,7 +36,11 @@ public class Epic extends Task {
     }
 
     public void setEndTime(String endTime) {
-        this.endTime = LocalDateTime.parse(endTime, DATE_TIME_FORMATTER);
+        if (endTime.equals("null")) {
+            this.endTime = null;
+        } else {
+            this.endTime = LocalDateTime.parse(endTime, DATE_TIME_FORMATTER);
+        }
     }
 
     public void addSubId(int newId) {
@@ -55,9 +68,9 @@ public class Epic extends Task {
                 ", status='" + status + '\'' +
                 ", id=" + id +
                 ", subsId=" + subsId +
-                ", startTime=" + startTime.format(DATE_TIME_FORMATTER) +
+                ", startTime=" + (startTime != null ? startTime.format(DATE_TIME_FORMATTER) : "null") +
                 ", duration=" + duration.toMinutes() +
-                ", endTime=" + getEndTime().format(DATE_TIME_FORMATTER) +
+                ", endTime=" + (endTime != null ? startTime.format(DATE_TIME_FORMATTER) : "null") +
                 '}';
     }
 }
