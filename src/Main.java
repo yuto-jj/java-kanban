@@ -7,27 +7,28 @@ import tasks.Subtask;
 import tasks.Task;
 
 import java.io.File;
+import java.time.LocalDateTime;
 
 public class Main {
-
     public static void main(String[] args) {
         TaskManager taskManager = Managers.getDefault();
-        Task task1 = new Task("1. Задача", "1. Задача", "11:30 10.09.2024", 90);
+
+        Task task1 = new Task("1. Задача", "1. Задача", LocalDateTime.of(2024, 9, 10, 11, 30), 90);
         int t1 = taskManager.addTask(task1);
-        Task task2 = new Task("2. Задача", "2. Задача", "11:30 11.09.2024", 90);
+        Task task2 = new Task("2. Задача", "2. Задача", LocalDateTime.of(2024, 9, 11, 11, 30), 90);
         int t2 = taskManager.addTask(task2);
         Epic epic1 = new Epic("1. Эпик", "1. Эпик");
         int e1 = taskManager.addEpic(epic1);
         Subtask subtask1 = new Subtask("1. Подзадача", "1. Эпик. 1. Подзадача", e1,
-                "11:30 12.09.2024", 90);
+                LocalDateTime.of(2024, 9, 12, 11, 30), 90);
         int s1 = taskManager.addSubtask(subtask1);
         Subtask subtask2 = new Subtask("2. Подзадача", "1. Эпик. 2. Подзадача", e1,
-                "11:30 13.09.2024", 90);
+                LocalDateTime.of(2024, 9, 13, 11, 30), 90);
         int s2 = taskManager.addSubtask(subtask2);
         Epic epic2 = new Epic("2. Эпик", "2. Эпик");
         int e2 = taskManager.addEpic(epic2);
         Subtask subtask3 = new Subtask("1. Подзадача", "2. Эпик. 1. Подзадача", e2,
-                "11:30 14.09.2024", 90);
+                LocalDateTime.of(2024, 9, 14, 11, 30), 90);
         int s3 = taskManager.addSubtask(subtask3);
 
         System.out.println(taskManager.getTasks());
@@ -36,11 +37,13 @@ public class Main {
         System.out.println(taskManager.getSubtasksByEpicId(e1));
 
         Task task3 = new Task(t1, "1. Задача", "1. Задача - статус изменен", Status.IN_PROGRESS,
-                "11:30 15.09.2024", 90);
+                LocalDateTime.of(2024, 9, 15, 11, 30), 90);
         taskManager.taskUpdate(task3);
+
         Task task4 = new Task(t2, "2. Задача", "2. Задача - статус изменен", Status.DONE,
-                "11:30 16.09.2024", 90);
+                LocalDateTime.of(2024, 9, 16, 11, 30), 90);
         taskManager.taskUpdate(task4);
+
         System.out.println(taskManager.getTask(t1));
         printAllTasks(taskManager);
         System.out.println(taskManager.getTask(t2));
@@ -53,21 +56,22 @@ public class Main {
 
         Subtask subtask4 = new Subtask(s1, "1. Подзадача",
                 "1. Эпик. 1. Подзадача - статус изменен", Status.DONE, e1,
-                "11:30 17.09.2024", 90);
+                LocalDateTime.of(2024, 9, 17, 11, 30), 90);
         taskManager.subtaskUpdate(subtask4);
         System.out.println(taskManager.getSubtask(s1));
         printAllTasks(taskManager);
+
         Subtask subtask5 = new Subtask(s2, "2. Подзадача",
                 "1. Эпик. 2. Подзадача - статус изменен", Status.IN_PROGRESS, e1,
-                "11:30 18.09.2024", 90);
+                LocalDateTime.of(2024, 9, 18, 11, 30), 90);
         taskManager.subtaskUpdate(subtask5);
         System.out.println(taskManager.getSubtask(s2));
         printAllTasks(taskManager);
         System.out.println(taskManager.getSubtasksByEpicId(e1));
 
-        Subtask subtask6 = new Subtask(s3,"1. Подзадача",
+        Subtask subtask6 = new Subtask(s3, "1. Подзадача",
                 "2. Эпик. 1. Подзадача - статус изменен", Status.DONE, e2,
-                "11:30 19.09.2024", 90);
+                LocalDateTime.of(2024, 9, 19, 11, 30), 90);
         taskManager.subtaskUpdate(subtask6);
         System.out.println(taskManager.getSubtasksByEpicId(e2));
 
@@ -81,7 +85,7 @@ public class Main {
         System.out.println(taskManager.getSubtasks());
 
         Task task5 = new Task("Задача для истории", "Описание для истории",
-                "11:30 20.09.2024", 90);
+                LocalDateTime.of(2024, 9, 20, 11, 30), 90);
         int t5 = taskManager.addTask(task5);
         taskManager.getTask(t5);
         taskManager.getTask(t2);
@@ -93,30 +97,30 @@ public class Main {
         taskManager.getEpic(e2);
         printAllTasks(taskManager);
 
-
         File file = new File("resources/tasks.csv");
 
         FileBackedTaskManager fileManager = new FileBackedTaskManager(file);
-        Task task = new Task("Первая задача", "Описание - 1", "11:30 21.09.2024",
-                90);
+        Task task = new Task("Первая задача", "Описание - 1",
+                LocalDateTime.of(2024, 9, 21, 11, 30), 90);
         fileManager.addTask(task);
+
         Epic epic = new Epic("Первый эпик", "Опсание - 2");
         int epicId = fileManager.addEpic(epic);
+
         Subtask subtask = new Subtask("Первая подзадача", "Опсание - 3", epicId,
-                "11:30 22.09.2024", 90);
+                LocalDateTime.of(2024, 9, 22, 11, 30), 90);
         fileManager.addSubtask(subtask);
 
         System.out.println("Текущая рабочая директория: " + System.getProperty("user.dir"));
 
-
-       FileBackedTaskManager fileManager2 = FileBackedTaskManager.loadFromFile(file);
-       Task task20 = new Task("Вторая задача", "Описание - 4",
-                "11:30 23.09.2024", 90);
+        FileBackedTaskManager fileManager2 = FileBackedTaskManager.loadFromFile(file);
+        Task task20 = new Task("Вторая задача", "Описание - 4",
+                LocalDateTime.of(2024, 9, 23, 11, 30), 90);
         Task task21 = new Task("Вторая задача", "Описание - 4",
-                "11:30 03.09.2024", 90);
+                LocalDateTime.of(2024, 9, 3, 11, 30), 90);
         fileManager2.addTask(task20);
-       fileManager2.addTask(task21);
-       printAllTasks(fileManager2);
+        fileManager2.addTask(task21);
+        printAllTasks(fileManager2);
     }
 
     private static void printAllTasks(TaskManager manager) {
@@ -144,8 +148,6 @@ public class Main {
 
         System.out.println("Задачи по приоритету:");
         manager.getPrioritizedTasks().forEach(System.out::println);
-        System.out.println("");
-
         System.out.println("--------");
     }
 }

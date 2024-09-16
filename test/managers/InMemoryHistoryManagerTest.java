@@ -5,6 +5,8 @@ import tasks.Epic;
 import tasks.Status;
 import tasks.Subtask;
 import tasks.Task;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,7 +22,7 @@ class InMemoryHistoryManagerTest {
         historyManager = Managers.getDefaultHistory();
         taskManager = Managers.getDefault();
         task = new Task("Задача - 1", "Тест задачи - 1",
-                "11:30 11.09.2024", 90);
+                LocalDateTime.of(2024, 9, 11, 11, 30), 90);
     }
 
     @Test
@@ -29,7 +31,7 @@ class InMemoryHistoryManagerTest {
         final List<Task> history = historyManager.getHistory();
         assertNotNull(history, "История не пустая.");
         assertEquals(1, history.size(), "История не пустая.");
-        assertEquals(task, history.get(0));
+        assertEquals(task, history.getFirst());
     }
 
     @Test
@@ -38,7 +40,7 @@ class InMemoryHistoryManagerTest {
         Epic epic1 = new Epic("1. Эпик", "Тест эпика - 1");
         int e1 = taskManager.addEpic(epic1);
         Subtask subtask1 = new Subtask("1. Подзадача", "Тест подзадачи - 1", e1,
-                "11:30 12.09.2024", 90);
+                LocalDateTime.of(2024, 9, 12, 11, 30), 90);
         int s1 = taskManager.addSubtask(subtask1);
 
         taskManager.getTask(t1);
@@ -55,7 +57,6 @@ class InMemoryHistoryManagerTest {
         assertEquals(1, taskManager.getHistory().size());
         taskManager.removeEpic(e1);
         assertEquals(0, taskManager.getHistory().size());
-
     }
 
     @Test
@@ -63,7 +64,7 @@ class InMemoryHistoryManagerTest {
         final int taskId = taskManager.addTask(task);
         taskManager.getTask(taskId);
         Task task2 = new Task(taskId, "Новая задача - 1", "Обновление задачи - 1", Status.DONE,
-                "11:30 13.09.2024", 90);
+                LocalDateTime.of(2024, 9, 13, 11, 30), 90);
         taskManager.taskUpdate(task2);
         taskManager.getTask(taskId);
 
@@ -79,10 +80,10 @@ class InMemoryHistoryManagerTest {
         historyManager.add(task);
         historyManager.add(task);
         assertEquals(1, historyManager.getHistory().size());
-        assertEquals(task, historyManager.getHistory().get(0));
+        assertEquals(task, historyManager.getHistory().getFirst());
 
         Task task1 = new Task(0, "2. Задача", "Задача с одинаковым id", Status.DONE,
-                "11:30 14.09.2024", 90);
+                LocalDateTime.of(2024, 9, 14, 11, 30), 90);
         assertEquals(task1.getId(), task.getId());
         historyManager.add(task);
         historyManager.add(task1);
@@ -94,26 +95,26 @@ class InMemoryHistoryManagerTest {
         historyManager.add(task);
         historyManager.remove(5);
         assertEquals(1, historyManager.getHistory().size());
-        assertEquals(task, historyManager.getHistory().get(0));
+        assertEquals(task, historyManager.getHistory().getFirst());
     }
 
     @Test
     void mustDeleteTheTaskAtTheBeginningInTheMiddleAndAtTheEndOfTheStory() {
         historyManager.add(task);
         Task task2 = new Task(1, "Задача - 1", "Описание - 1", Status.DONE,
-                "11:30 12.09.2024", 90);
+                LocalDateTime.of(2024, 9, 12, 11, 30), 90);
         historyManager.add(task2);
         Task task3 = new Task(2, "Задача - 1", "Описание - 1", Status.NEW,
-                "11:30 13.09.2024", 90);
+                LocalDateTime.of(2024, 9, 13, 11, 30), 90);
         historyManager.add(task3);
         Task task4 = new Task(3, "Задача - 1", "Описание - 1", Status.DONE,
-                "11:30 14.09.2024", 90);
+                LocalDateTime.of(2024, 9, 14, 11, 30), 90);
         historyManager.add(task4);
         Task task5 = new Task(4, "Задача - 1", "Описание - 1", Status.IN_PROGRESS,
-                "11:30 15.09.2024", 90);
+                LocalDateTime.of(2024, 9, 15, 11, 30), 90);
         historyManager.add(task5);
         Task task6 = new Task(5, "Задача - 1", "Описание - 1", Status.NEW,
-                "11:30 16.09.2024", 90);
+                LocalDateTime.of(2024, 9, 16, 11, 30), 90);
         historyManager.add(task6);
 
         assertEquals(6, historyManager.getHistory().size());

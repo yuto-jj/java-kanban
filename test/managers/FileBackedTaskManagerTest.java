@@ -9,6 +9,7 @@ import tasks.Task;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,17 +22,18 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
         file = File.createTempFile("tasks", ".csv");
         manager = new FileBackedTaskManager(file);
         task = new Task("Задача - 1", "Описание - 1",
-                "11:30 12.09.2024", 90);
+                LocalDateTime.of(2024, 9, 12, 11, 30), 90);
         tId = manager.addTask(task);
         epic = new Epic("Эпик - 1", "Описание - 1");
         eId = manager.addEpic(epic);
         sub = new Subtask("Подзадача - 1", "Описание - 1", eId,
-                "11:30 13.09.2024", 90);
+                LocalDateTime.of(2024, 9, 13, 11, 30), 90);
         sId = manager.addSubtask(sub);
         savedTask = manager.getTask(tId);
         savedEpic = manager.getEpic(eId);
         savedSub = manager.getSubtask(sId);
     }
+
 
     @Test
     void mustLoadAnEmptyFile() throws IOException {

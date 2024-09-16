@@ -14,20 +14,20 @@ public class Task {
     protected LocalDateTime startTime;
     protected static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
 
-    public Task(int id, String name, String description, Status status, String startTime, int duration) {
+    public Task(int id, String name, String description, Status status, LocalDateTime startTime, int duration) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.status = status;
-        this.startTime = LocalDateTime.parse(startTime, DATE_TIME_FORMATTER);
+        this.startTime = startTime;
         this.duration = Duration.ofMinutes(duration);
     }
 
-    public Task(String name, String description, String startTime, int duration) {
+    public Task(String name, String description, LocalDateTime startTime, int duration) {
         this.name = name;
         this.description = description;
         this.status = Status.NEW;
-        this.startTime = LocalDateTime.parse(startTime, DATE_TIME_FORMATTER);
+        this.startTime = startTime;
         this.duration = Duration.ofMinutes(duration);
     }
 
@@ -40,10 +40,6 @@ public class Task {
 
     public LocalDateTime getStartTime() {
         return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = LocalDateTime.parse(startTime, DATE_TIME_FORMATTER);
     }
 
     public void setStartTime(LocalDateTime startTime) {
@@ -118,9 +114,9 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
                 ", id=" + id +
-                ", startTime=" + startTime.format(DATE_TIME_FORMATTER) +
+                ", startTime=" + (startTime != null ? startTime.format(DATE_TIME_FORMATTER) : "null") +
                 ", duration=" + duration.toMinutes() +
-                ", endTime=" + getEndTime().format(DATE_TIME_FORMATTER) +
+                ", endTime=" + (getEndTime() != null ? getEndTime().format(DATE_TIME_FORMATTER) : "null") +
                 '}';
     }
 

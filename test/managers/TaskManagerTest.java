@@ -5,6 +5,8 @@ import tasks.Epic;
 import tasks.Status;
 import tasks.Subtask;
 import tasks.Task;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,7 +34,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
         assertNotNull(tasks, "Задачи не возвращаются.");
         assertEquals(1, tasks.size(), "Неверное количество задач.");
-        assertEquals(task, tasks.get(0), "Задачи не совпадают.");
+        assertEquals(task, tasks.getFirst(), "Задачи не совпадают.");
     }
 
     @Test
@@ -44,7 +46,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
         assertNotNull(epics, "Эпики не возвращаются.");
         assertEquals(1, epics.size(), "Неверное количество эпиков.");
-        assertEquals(epic, epics.get(0), "Эпики не совпадают.");
+        assertEquals(epic, epics.getFirst(), "Эпики не совпадают.");
     }
 
     @Test
@@ -56,7 +58,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
         assertNotNull(subtasks, "Подзадачи не возвращаются.");
         assertEquals(1, subtasks.size(), "Неверное количество подзадач.");
-        assertEquals(sub, subtasks.get(0), "Подзадачи не совпадают.");
+        assertEquals(sub, subtasks.getFirst(), "Подзадачи не совпадают.");
     }
 
     @Test
@@ -96,7 +98,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         ArrayList<Task> tasks = manager.getTasks();
         assertNotNull(tasks);
         assertEquals(1, tasks.size());
-        assertEquals(task, tasks.get(0));
+        assertEquals(task, tasks.getFirst());
     }
 
     @Test
@@ -104,7 +106,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         ArrayList<Epic> epics = manager.getEpics();
         assertNotNull(epics);
         assertEquals(1, epics.size());
-        assertEquals(epic, epics.get(0));
+        assertEquals(epic, epics.getFirst());
     }
 
     @Test
@@ -112,18 +114,18 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         ArrayList<Subtask> subs = manager.getSubtasks();
         assertNotNull(subs);
         assertEquals(1, subs.size());
-        assertEquals(sub, subs.get(0));
+        assertEquals(sub, subs.getFirst());
     }
 
     @Test
     void removeTaskTest() {
         Task task1 = new Task("Задача - 2", "Описание - 2",
-                "11:30 14.09.2024", 90);
+                LocalDateTime.of(2024, 9, 14, 11, 30), 90);
         int t2Id = manager.addTask(task1);
         manager.removeTask(tId);
         assertEquals(1, manager.getTasks().size());
-        assertEquals(task1, manager.getTasks().get(0));
-        assertEquals(manager.getTask(t2Id), manager.getTasks().get(0));
+        assertEquals(task1, manager.getTasks().getFirst());
+        assertEquals(manager.getTask(t2Id), manager.getTasks().getFirst());
         assertNull(manager.getTask(tId));
     }
 
@@ -133,27 +135,27 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         int e2Id = manager.addEpic(epic1);
         manager.removeEpic(eId);
         assertEquals(1, manager.getEpics().size());
-        assertEquals(epic1, manager.getEpics().get(0));
-        assertEquals(manager.getEpic(e2Id), manager.getEpics().get(0));
+        assertEquals(epic1, manager.getEpics().getFirst());
+        assertEquals(manager.getEpic(e2Id), manager.getEpics().getFirst());
         assertNull(manager.getEpic(eId));
     }
 
     @Test
     void removeSubtaskTest() {
         Subtask sub1 = new Subtask("Задача - 2", "Описание - 2", eId,
-                "11:30 14.09.2024", 90);
+                LocalDateTime.of(2024, 9, 14, 11, 30), 90);
         int s1Id = manager.addSubtask(sub1);
         manager.removeSubtask(sId);
         assertEquals(1, manager.getSubtasks().size());
-        assertEquals(sub1, manager.getSubtasks().get(0));
-        assertEquals(manager.getSubtask(s1Id), manager.getSubtasks().get(0));
+        assertEquals(sub1, manager.getSubtasks().getFirst());
+        assertEquals(manager.getSubtask(s1Id), manager.getSubtasks().getFirst());
         assertNull(manager.getSubtask(sId));
     }
 
     @Test
     void removeTasksTest() {
         Task task1 = new Task("Задача - 2", "Описание - 2",
-                "11:30 14.09.2024", 90);
+                LocalDateTime.of(2024, 9, 14, 11, 30), 90);
         manager.addTask(task1);
         manager.removeTasks();
         assertEquals(0, manager.getTasks().size());
@@ -174,7 +176,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void removeSubtasksTest() {
         Subtask sub1 = new Subtask("Задача - 2", "Описание - 2", eId,
-                "11:30 14.09.2024", 90);
+                LocalDateTime.of(2024, 9, 14, 11, 30), 90);
         manager.addSubtask(sub1);
         manager.removeSubtasks();
         assertEquals(0, manager.getSubtasks().size());
@@ -185,7 +187,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void taskUpdateTest() {
         Task task1 = new Task(tId, "Задача - обновлена", "Описание - обновлено", Status.DONE,
-                "00:00 13.09.2024", 180);
+                LocalDateTime.of(2024, 9, 13, 0, 0), 180);
         manager.taskUpdate(task1);
         Task updatedTask = manager.getTask(tId);
         assertEquals(task.getId(), updatedTask.getId());
@@ -215,7 +217,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void subtaskUpdateTest() {
         Subtask sub1 = new Subtask(sId, "Задача - обновлена", "Описание - обновлено",
-                Status.DONE, eId, "00:00 13.09.2024", 180);
+                Status.DONE, eId, LocalDateTime.of(2024, 9, 13, 0, 0), 180);
         manager.subtaskUpdate(sub1);
         Subtask updatedSub = manager.getSubtask(sId);
         assertEquals(sub.getId(), updatedSub.getId());
@@ -231,7 +233,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void getSubtasksByEpicIdTest() {
         Subtask sub1 = new Subtask("Задача - 2", "Описание - 2", eId,
-                "11:30 14.09.2024", 90);
+                LocalDateTime.of(2024, 9, 14, 11, 30), 90);
         manager.addSubtask(sub1);
         ArrayList<Subtask> subtasks = manager.getSubtasksByEpicId(eId);
         assertNotNull(subtasks);
@@ -243,9 +245,9 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void timeIntervalIntersectionTest() {
         Task task1 = new Task("Задача - 2", "Описание - 2",
-                "12:00 12.09.2024", 90);
+                LocalDateTime.of(2024, 9, 12, 12, 0), 90);
         Subtask sub1 = new Subtask("Подзадача - 2", "Описание - 2", eId,
-                "12:00 13.09.2024", 90);
+                LocalDateTime.of(2024, 9, 13, 12, 0), 90);
         int t1Id = manager.addTask(task1);
         int s1Id = manager.addSubtask(sub1);
 
