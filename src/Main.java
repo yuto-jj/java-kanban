@@ -110,6 +110,10 @@ public class Main {
         Subtask subtask = new Subtask("Первая подзадача", "Опсание - 3", epicId,
                 LocalDateTime.of(2024, 9, 22, 11, 30), 90);
         fileManager.addSubtask(subtask);
+        Epic epic33 = new Epic("1", "2");
+        Epic epic44 = new Epic("2", "3");
+        fileManager.addEpic(epic33);
+        fileManager.addEpic(epic44);
 
         System.out.println("Текущая рабочая директория: " + System.getProperty("user.dir"));
 

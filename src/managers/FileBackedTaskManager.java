@@ -89,10 +89,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             int epicId = 0;
             if (tasksArray.length > 8) {
                 epicId = Integer.parseInt(tasksArray[5]);
-                startTime = LocalDateTime.parse(tasksArray[6], DATE_TIME_FORMATTER);
+                startTime = tasksArray[6].equals("null") ? null :
+                        LocalDateTime.parse(tasksArray[6], DATE_TIME_FORMATTER);
                 duration = Integer.parseInt(tasksArray[7]);
             } else {
-                startTime = LocalDateTime.parse(tasksArray[5], DATE_TIME_FORMATTER);
+                startTime = tasksArray[5].equals("null") ? null :
+                        LocalDateTime.parse(tasksArray[5], DATE_TIME_FORMATTER);
                 duration = Integer.parseInt(tasksArray[6]);
             }
             switch (type) {
@@ -105,7 +107,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     task.setStartTime(startTime);
                     task.setDuration(duration);
                     Epic epic = (Epic) task;
-                    epic.setEndTime(LocalDateTime.parse(tasksArray[7], DATE_TIME_FORMATTER));
+                    epic.setEndTime(tasksArray[7].equals("null") ? null :
+                            LocalDateTime.parse(tasksArray[7], DATE_TIME_FORMATTER));
                     break;
                 case SUBTASK:
                     task = new Subtask(id, name, description, status, epicId, startTime, duration);
