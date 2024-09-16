@@ -9,22 +9,36 @@ import tasks.Task;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FileBackedTaskManagerTest {
-    FileBackedTaskManager manager;
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
+
     File file;
 
     @BeforeEach
     void beforeEach() throws IOException {
         file = File.createTempFile("tasks", ".csv");
         manager = new FileBackedTaskManager(file);
+        task = new Task("Задача - 1", "Описание - 1",
+                LocalDateTime.of(2024, 9, 12, 11, 30), 90);
+        tId = manager.addTask(task);
+        epic = new Epic("Эпик - 1", "Описание - 1");
+        eId = manager.addEpic(epic);
+        sub = new Subtask("Подзадача - 1", "Описание - 1", eId,
+                LocalDateTime.of(2024, 9, 13, 11, 30), 90);
+        sId = manager.addSubtask(sub);
+        savedTask = manager.getTask(tId);
+        savedEpic = manager.getEpic(eId);
+        savedSub = manager.getSubtask(sId);
     }
+
 
     @Test
     void mustLoadAnEmptyFile() throws IOException {
         File file1 = File.createTempFile("empty", ".csv");
+        assertDoesNotThrow(() -> FileBackedTaskManager.loadFromFile(file1));
         FileBackedTaskManager secondManager = FileBackedTaskManager.loadFromFile(file1);
         assertNotNull(secondManager);
     }
@@ -33,10 +47,10 @@ public class FileBackedTaskManagerTest {
     void mustSaveTasksToNotExistFile() {
         File file1 = new File("resources/123.csv");
         FileBackedTaskManager secondManager = new FileBackedTaskManager(file1);
-        Task task = new Task("Первая задача", "Описание - 1");
-        int taskId = secondManager.addTask(task);
+        int t1Id = secondManager.addTask(task);
+        assertDoesNotThrow(() -> FileBackedTaskManager.loadFromFile(file1));
         FileBackedTaskManager thirdManager = FileBackedTaskManager.loadFromFile(file1);
-        assertEquals(secondManager.getTask(taskId), thirdManager.getTask(taskId));
+        assertEquals(secondManager.getTask(t1Id), thirdManager.getTask(t1Id));
     }
 
     @Test
@@ -47,46 +61,56 @@ public class FileBackedTaskManagerTest {
 
     @Test
     void mustSaveTasksInFileAndLoadFromFile() {
-        Task task = new Task("Первая задача", "Описание - 1");
-        int taskId = manager.addTask(task);
-        Epic epic = new Epic("Первый эпик", "Опсание - 2");
-        int epicId = manager.addEpic(epic);
-        Subtask subtask = new Subtask("Первая подзадача", "Опсание - 3", epicId);
-        int subId = manager.addSubtask(subtask);
+        assertEquals(task, manager.getTask(tId));
+        assertEquals(task.getName(), manager.getTask(tId).getName());
+        assertEquals(task.getDescription(), manager.getTask(tId).getDescription());
+        assertEquals(task.getStatus(), manager.getTask(tId).getStatus());
+        assertEquals(task.getStartTime(), manager.getTask(tId).getStartTime());
+        assertEquals(task.getDuration(), manager.getTask(tId).getDuration());
 
-        assertEquals(task, manager.getTask(taskId));
-        assertEquals(task.getName(), manager.getTask(taskId).getName());
-        assertEquals(task.getDescription(), manager.getTask(taskId).getDescription());
-        assertEquals(task.getStatus(), manager.getTask(taskId).getStatus());
+        assertEquals(epic, manager.getEpic(eId));
+        assertEquals(epic.getName(), manager.getEpic(eId).getName());
+        assertEquals(epic.getDescription(), manager.getEpic(eId).getDescription());
+        assertEquals(epic.getStatus(), manager.getEpic(eId).getStatus());
+        assertEquals(epic.getSubsId(), manager.getEpic(eId).getSubsId());
+        assertEquals(epic.getStartTime(), manager.getEpic(eId).getStartTime());
+        assertEquals(epic.getDuration(), manager.getEpic(eId).getDuration());
+        assertEquals(epic.getEndTime(), manager.getEpic(eId).getEndTime());
 
-        assertEquals(epic, manager.getEpic(epicId));
-        assertEquals(epic.getName(), manager.getEpic(epicId).getName());
-        assertEquals(epic.getDescription(), manager.getEpic(epicId).getDescription());
-        assertEquals(epic.getStatus(), manager.getEpic(epicId).getStatus());
-        assertEquals(epic.getSubsId(), manager.getEpic(epicId).getSubsId());
+        assertEquals(sub, manager.getSubtask(sId));
+        assertEquals(sub.getName(), manager.getSubtask(sId).getName());
+        assertEquals(sub.getDescription(), manager.getSubtask(sId).getDescription());
+        assertEquals(sub.getStatus(), manager.getSubtask(sId).getStatus());
+        assertEquals(sub.getEpicId(), manager.getSubtask(sId).getEpicId());
+        assertEquals(sub.getStartTime(), manager.getSubtask(sId).getStartTime());
+        assertEquals(sub.getDuration(), manager.getSubtask(sId).getDuration());
 
-        assertEquals(subtask, manager.getSubtask(subId));
-        assertEquals(subtask.getName(), manager.getSubtask(subId).getName());
-        assertEquals(subtask.getDescription(), manager.getSubtask(subId).getDescription());
-        assertEquals(subtask.getStatus(), manager.getSubtask(subId).getStatus());
-        assertEquals(subtask.getEpicId(), manager.getSubtask(subId).getEpicId());
-
+        assertDoesNotThrow(() -> FileBackedTaskManager.loadFromFile(file));
         FileBackedTaskManager secondManager = FileBackedTaskManager.loadFromFile(file);
-        assertEquals(manager.getTask(taskId), secondManager.getTask(taskId));
-        assertEquals(manager.getTask(taskId).getName(), secondManager.getTask(taskId).getName());
-        assertEquals(manager.getTask(taskId).getDescription(), secondManager.getTask(taskId).getDescription());
-        assertEquals(manager.getTask(taskId).getStatus(), secondManager.getTask(taskId).getStatus());
+        assertEquals(manager.getTask(tId), secondManager.getTask(tId));
+        assertEquals(manager.getTask(tId).getName(), secondManager.getTask(tId).getName());
+        assertEquals(manager.getTask(tId).getDescription(), secondManager.getTask(tId).getDescription());
+        assertEquals(manager.getTask(tId).getStatus(), secondManager.getTask(tId).getStatus());
+        assertEquals(manager.getTask(tId).getStartTime(), secondManager.getTask(tId).getStartTime());
+        assertEquals(manager.getTask(tId).getDuration(), secondManager.getTask(tId).getDuration());
 
-        assertEquals(manager.getEpic(epicId), secondManager.getEpic(epicId));
-        assertEquals(manager.getEpic(epicId).getName(), secondManager.getEpic(epicId).getName());
-        assertEquals(manager.getEpic(epicId).getDescription(), secondManager.getEpic(epicId).getDescription());
-        assertEquals(manager.getEpic(epicId).getStatus(), secondManager.getEpic(epicId).getStatus());
-        assertEquals(manager.getEpic(epicId).getSubsId(), secondManager.getEpic(epicId).getSubsId());
+        assertEquals(manager.getEpic(eId), secondManager.getEpic(eId));
+        assertEquals(manager.getEpic(eId).getName(), secondManager.getEpic(eId).getName());
+        assertEquals(manager.getEpic(eId).getDescription(), secondManager.getEpic(eId).getDescription());
+        assertEquals(manager.getEpic(eId).getStatus(), secondManager.getEpic(eId).getStatus());
+        assertEquals(manager.getEpic(eId).getSubsId(), secondManager.getEpic(eId).getSubsId());
+        assertEquals(manager.getEpic(eId).getStartTime(), secondManager.getEpic(eId).getStartTime());
+        assertEquals(manager.getEpic(eId).getDuration(), secondManager.getEpic(eId).getDuration());
+        assertEquals(manager.getEpic(eId).getEndTime(), secondManager.getEpic(eId).getEndTime());
 
-        assertEquals(manager.getSubtask(subId), secondManager.getSubtask(subId));
-        assertEquals(manager.getSubtask(subId).getName(), secondManager.getSubtask(subId).getName());
-        assertEquals(manager.getSubtask(subId).getDescription(), secondManager.getSubtask(subId).getDescription());
-        assertEquals(manager.getSubtask(subId).getStatus(), secondManager.getSubtask(subId).getStatus());
-        assertEquals(manager.getSubtask(subId).getEpicId(), secondManager.getSubtask(subId).getEpicId());
+        assertEquals(manager.getSubtask(sId), secondManager.getSubtask(sId));
+        assertEquals(manager.getSubtask(sId).getName(), secondManager.getSubtask(sId).getName());
+        assertEquals(manager.getSubtask(sId).getDescription(), secondManager.getSubtask(sId).getDescription());
+        assertEquals(manager.getSubtask(sId).getStatus(), secondManager.getSubtask(sId).getStatus());
+        assertEquals(manager.getSubtask(sId).getEpicId(), secondManager.getSubtask(sId).getEpicId());
+        assertEquals(manager.getSubtask(sId).getStartTime(), secondManager.getSubtask(sId).getStartTime());
+        assertEquals(manager.getSubtask(sId).getDuration(), secondManager.getSubtask(sId).getDuration());
+
+        assertEquals(manager.getPrioritizedTasks(), secondManager.getPrioritizedTasks());
     }
 }

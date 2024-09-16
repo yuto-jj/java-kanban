@@ -3,6 +3,7 @@ package managers;
 import org.junit.jupiter.api.Test;
 import tasks.Task;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,8 @@ class ManagersTest {
     @Test
     void mustReturnEmployedTaskManager() {
         TaskManager taskManager = Managers.getDefault();
-        Task task = new Task("Задача - 1", "Тест задачи - 1");
+        Task task = new Task("Задача - 1", "Тест задачи - 1",
+                LocalDateTime.of(2024, 9, 11, 11, 30), 90);
         final int taskId = taskManager.addTask(task);
         ArrayList<Task> tasks = taskManager.getTasks();
         assertNotEquals(0, taskId);
@@ -35,10 +37,10 @@ class ManagersTest {
     @Test
     void mustReturnEmployedHistoryManager() {
         HistoryManager historyManager = Managers.getDefaultHistory();
-        Task task = new Task("Задача - 1", "Тест задачи - 1");
+        Task task = new Task("Задача - 1", "Тест задачи - 1",
+                LocalDateTime.of(2024, 9, 11, 11, 30), 90);
         historyManager.add(task);
         List<Task> history = historyManager.getHistory();
         assertNotNull(history);
     }
-
 }

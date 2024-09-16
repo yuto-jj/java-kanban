@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface TaskManager {
 
+    List<Task> getPrioritizedTasks();
+
     int addTask(Task task);
 
     int addSubtask(Subtask subtask);

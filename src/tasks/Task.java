@@ -1,5 +1,8 @@
 package tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
@@ -7,18 +10,52 @@ public class Task {
     protected String name;
     protected String description;
     protected Status status;
+    protected Duration duration;
+    protected LocalDateTime startTime;
+    protected static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
 
-    public Task(int id, String name, String description, Status status) {
+    public Task(int id, String name, String description, Status status, LocalDateTime startTime, int duration) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.status = status;
+        this.startTime = startTime;
+        this.duration = Duration.ofMinutes(duration);
     }
 
-    public Task(String name, String description) {
+    public Task(String name, String description, LocalDateTime startTime, int duration) {
         this.name = name;
         this.description = description;
         this.status = Status.NEW;
+        this.startTime = startTime;
+        this.duration = Duration.ofMinutes(duration);
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime != null && duration != null) {
+            return startTime.plus(duration);
+        }
+        return null;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int minutes) {
+        this.duration = Duration.ofMinutes(minutes);
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
     }
 
     public int getId() {
@@ -67,7 +104,7 @@ public class Task {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, status);
+        return Objects.hash(id);
     }
 
     @Override
@@ -77,7 +114,12 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
                 ", id=" + id +
+                ", startTime=" + (startTime != null ? startTime.format(DATE_TIME_FORMATTER) : "null") +
+                ", duration=" + duration.toMinutes() +
+                ", endTime=" + (getEndTime() != null ? getEndTime().format(DATE_TIME_FORMATTER) : "null") +
                 '}';
     }
 
 }
+
+
