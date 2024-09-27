@@ -119,7 +119,6 @@ public class Task {
                 ", endTime=" + (getEndTime() != null ? getEndTime().format(DATE_TIME_FORMATTER) : "null") +
                 '}';
     }
-
 }
 
 
