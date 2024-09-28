@@ -56,10 +56,7 @@ public class TaskHandlerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(201, response.statusCode());
-
         List<Task> tasksFromManager = manager.getTasks();
-
-        assertNotNull(tasksFromManager);
         assertEquals(1, tasksFromManager.size());
 
         Task taskFromManager = tasksFromManager.getFirst();
@@ -107,9 +104,9 @@ public class TaskHandlerTest {
         Task task3 = new Task("Задача", "Описание", LocalDateTime.of(2024, 9,
                 12, 11, 30), 90);
 
-        int id1 = manager.addTask(task1);
+        manager.addTask(task1);
         int id2 = manager.addTask(task2);
-        int id3 = manager.addTask(task3);
+        manager.addTask(task3);
 
         HttpClient client = HttpClient.newHttpClient();
         URI uri = URI.create(partOfURL);
@@ -138,9 +135,7 @@ public class TaskHandlerTest {
         List<Task> tasksFromManager = manager.getTasks();
 
         assertEquals(tasks.size(), tasksFromManager.size());
-        assertEquals(id1, tasksFromManager.get(0).getId());
-        assertEquals(id2, tasksFromManager.get(1).getId());
-        assertEquals(id3, tasksFromManager.get(2).getId());
+        assertEquals(tasks, tasksFromManager);
         assertEquals(task2.getName(), tasksFromManager.get(1).getName());
         assertEquals(task2.getDescription(), tasksFromManager.get(1).getDescription());
         assertEquals(task2.getStatus(), tasksFromManager.get(1).getStatus());

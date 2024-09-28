@@ -12,6 +12,7 @@ public class Task {
     protected Status status;
     protected Duration duration;
     protected LocalDateTime startTime;
+    protected Type type = Type.TASK;
     protected static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
 
     public Task(int id, String name, String description, Status status, LocalDateTime startTime, int duration) {
@@ -91,7 +92,7 @@ public class Task {
     }
 
     public Type getType() {
-        return Type.TASK;
+        return type;
     }
 
     @Override

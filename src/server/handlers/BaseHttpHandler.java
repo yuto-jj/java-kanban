@@ -47,5 +47,4 @@ public abstract class BaseHttpHandler implements HttpHandler {
         h.getResponseBody().write(resp);
         h.close();
     }
-
 }

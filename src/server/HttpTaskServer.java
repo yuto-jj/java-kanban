@@ -8,6 +8,9 @@ import managers.TaskManager;
 import server.adapters.DurationAdapter;
 import server.adapters.LocalDateTimeAdapter;
 import server.handlers.*;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -36,6 +39,25 @@ public class HttpTaskServer {
 
     public static void main(String[] args) throws IOException {
         TaskManager manager = Managers.getDefault();
+        Task task1 = new Task("Задача", "Описание", LocalDateTime.of(2024, 9,
+                10, 11, 30), 90);
+        int t1Id = manager.addTask(task1);
+        Task task2 = new Task("Задача", "Описание", LocalDateTime.of(2024, 9,
+                11, 11, 30), 90);
+        manager.addTask(task2);
+        Task task3 = new Task("Задача", "Описание", LocalDateTime.of(2024, 9,
+                12, 11, 30), 90);
+        int t3Id = manager.addTask(task3);
+        Epic epic = new Epic("Эпик - 1", "Описание");
+        int eId = manager.addEpic(epic);
+        Subtask subtask = new Subtask("Подзадача", "Описание", eId,
+                LocalDateTime.of(2024, 9, 13, 11, 30), 90);
+        int sId = manager.addSubtask(subtask);
+        manager.getTask(t1Id);
+        manager.getTask(t3Id);
+        manager.getSubtask(sId);
+        manager.getEpic(eId);
+
         HttpTaskServer httpTaskServer = new HttpTaskServer(manager);
         httpTaskServer.start();
     }

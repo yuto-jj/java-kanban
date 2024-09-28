@@ -1,5 +1,7 @@
 package managers;
 
+import exceptions.NotFoundException;
+import exceptions.TimeValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
@@ -13,6 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
+    public InMemoryTaskManagerTest() throws NotFoundException, TimeValidationException {
+
+    }
 
     @BeforeEach
     void beforeEach() {

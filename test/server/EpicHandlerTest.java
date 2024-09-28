@@ -41,7 +41,7 @@ public class EpicHandlerTest {
         server.stop();
     }
     @Test
-    void postepic() throws IOException, InterruptedException {
+    void postEpic() throws IOException, InterruptedException {
         Epic epic = new Epic("Задача", "Описание");
         String epicJson = gson.toJson(epic);
 
@@ -58,10 +58,7 @@ public class EpicHandlerTest {
         assertEquals(201, response.statusCode());
 
         List<Epic> epicsFromManager = manager.getEpics();
-
-        assertNotNull(epicsFromManager);
         assertEquals(1, epicsFromManager.size());
-
         Epic epicFromManager = epicsFromManager.getFirst();
 
         assertEquals(1, epicFromManager.getId());
@@ -106,9 +103,9 @@ public class EpicHandlerTest {
         Epic epic2 = new Epic("Эпик - 2", "Описание");
         Epic epic3 = new Epic("Эпик - 3", "Описание");
 
-        int id1 = manager.addEpic(epic1);
+        manager.addEpic(epic1);
         int id2 = manager.addEpic(epic2);
-        int id3 = manager.addEpic(epic3);
+        manager.addEpic(epic3);
 
         HttpClient client = HttpClient.newHttpClient();
         URI uri = URI.create(partOfURL);
@@ -137,9 +134,7 @@ public class EpicHandlerTest {
         List<Epic> epicsFromManager = manager.getEpics();
 
         assertEquals(epics.size(), epicsFromManager.size());
-        assertEquals(id1, epicsFromManager.get(0).getId());
-        assertEquals(id2, epicsFromManager.get(1).getId());
-        assertEquals(id3, epicsFromManager.get(2).getId());
+        assertEquals(epics, epicsFromManager);
         assertEquals(epic2.getName(), epicsFromManager.get(1).getName());
         assertEquals(epic2.getDescription(), epicsFromManager.get(1).getDescription());
         assertEquals(epic2.getStatus(), epicsFromManager.get(1).getStatus());
