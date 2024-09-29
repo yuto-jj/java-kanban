@@ -4,17 +4,20 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Epic extends Task {
+
     private final ArrayList<Integer> subsId = new ArrayList<>();
     private LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description, LocalDateTime.now(), 0);
         endTime = LocalDateTime.now();
+        this.type = Type.EPIC;
     }
 
     public Epic(int newId, String newName, String newDescription) {
         super(newName, newDescription, LocalDateTime.now(), 0);
         this.id = newId;
+        this.type = Type.EPIC;
     }
 
     @Override
@@ -36,11 +39,6 @@ public class Epic extends Task {
 
     public void removeSubId(int newId) {
         subsId.remove(Integer.valueOf(newId));
-    }
-
-    @Override
-    public Type getType() {
-        return Type.EPIC;
     }
 
     @Override

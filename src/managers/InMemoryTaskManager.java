@@ -1,5 +1,7 @@
 package managers;
 
+import exceptions.NotFoundException;
+import exceptions.TimeValidationException;
 import tasks.Epic;
 import tasks.Status;
 import tasks.Subtask;
@@ -11,6 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
+
     protected int id = 0;
     protected final HashMap<Integer, Task> tasks = new HashMap<>();
     protected final HashMap<Integer, Epic> epics = new HashMap<>();
@@ -24,7 +27,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private boolean timeValidation(Task task) {
-    return prioritizedTasks.stream().filter(t -> !(t.equals(task))).noneMatch((t) -> (task.getStartTime().isBefore(t.getEndTime()) &&
+    return prioritizedTasks.stream().filter(t -> !(t.equals(task))).noneMatch((t) ->
+            (task.getStartTime().isBefore(t.getEndTime()) &&
                 task.getEndTime().isAfter(t.getStartTime())));
     }
 
@@ -36,8 +40,9 @@ public class InMemoryTaskManager implements TaskManager {
             tasks.put(task.getId(), task);
             prioritizedTasks.add(task);
             return task.getId();
+        } else {
+            throw new TimeValidationException();
         }
-        return 0;
     }
 
     @Override
@@ -45,15 +50,19 @@ public class InMemoryTaskManager implements TaskManager {
         int epicId = subtask.getEpicId();
         Epic epicSubtask = epics.get(epicId);
 
-        if (epicSubtask != null && timeValidation(subtask)) {
-            id++;
-            subtask.setId(id);
-            int subId = subtask.getId();
-            subtasks.put(subId, subtask);
-            prioritizedTasks.add(subtask);
-            epicSubtask.addSubId(subId);
-            epicUpdate(epicId);
-            return subtask.getId();
+        if (epicSubtask != null) {
+            if (timeValidation(subtask)) {
+                id++;
+                subtask.setId(id);
+                int subId = subtask.getId();
+                subtasks.put(subId, subtask);
+                prioritizedTasks.add(subtask);
+                epicSubtask.addSubId(subId);
+                epicUpdate(epicId);
+                return subtask.getId();
+            } else {
+                throw new TimeValidationException();
+            }
         }
         return 0;
     }
@@ -164,39 +173,60 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTask(int taskId) {
-        historyManager.add(tasks.get(taskId));
-        return tasks.get(taskId);
+        if (tasks.containsKey(taskId)) {
+            historyManager.add(tasks.get(taskId));
+            return tasks.get(taskId);
+        } else {
+            throw new NotFoundException();
+        }
     }
 
     @Override
     public Subtask getSubtask(int subId) {
-        historyManager.add(subtasks.get(subId));
-        return subtasks.get(subId);
+        if (subtasks.containsKey(subId)) {
+            historyManager.add(subtasks.get(subId));
+            return subtasks.get(subId);
+        }
+        throw new NotFoundException();
     }
 
     @Override
     public Epic getEpic(int epicId) {
-        historyManager.add(epics.get(epicId));
-        return epics.get(epicId);
+        if (epics.containsKey(epicId)) {
+            historyManager.add(epics.get(epicId));
+            return epics.get(epicId);
+        }
+        throw new NotFoundException();
     }
 
     @Override
     public void taskUpdate(Task task) {
-        if (tasks.containsKey(task.getId()) && timeValidation(task)) {
+        if (tasks.containsKey(task.getId())) {
+            if (timeValidation(task)) {
                 prioritizedTasks.remove(tasks.get(task.getId()));
                 tasks.put(task.getId(), task);
                 prioritizedTasks.add(task);
+            } else {
+                throw new TimeValidationException();
+            }
+        } else {
+            throw new NotFoundException();
         }
     }
 
     @Override
     public void subtaskUpdate(Subtask subtask) {
-        if (subtasks.containsKey(subtask.getId()) && epics.containsKey(subtask.getEpicId()) &&
-                timeValidation(subtask)) {
-                prioritizedTasks.remove(subtasks.get(subtask.getId()));
-                subtasks.put(subtask.getId(), subtask);
-                prioritizedTasks.add(subtask);
-                epicUpdate(subtask.getEpicId());
+        if (subtasks.containsKey(subtask.getId()) && epics.containsKey(subtask.getEpicId())) {
+                if (timeValidation(subtask)) {
+                    prioritizedTasks.remove(subtasks.get(subtask.getId()));
+                    subtasks.put(subtask.getId(), subtask);
+                    prioritizedTasks.add(subtask);
+                    epicUpdate(subtask.getEpicId());
+                } else {
+                    throw new TimeValidationException();
+                }
+        } else {
+            throw new NotFoundException();
         }
     }
 
@@ -206,6 +236,8 @@ public class InMemoryTaskManager implements TaskManager {
             Epic newEpic = epics.get(epic.getId());
             newEpic.setName(epic.getName());
             newEpic.setDescription(epic.getDescription());
+        } else {
+            throw new NotFoundException();
         }
     }
 
@@ -225,6 +257,8 @@ public class InMemoryTaskManager implements TaskManager {
             prioritizedTasks.remove(tasks.get(taskId));
             tasks.remove(taskId);
             historyManager.remove(taskId);
+        } else {
+            throw new NotFoundException();
         }
     }
 
@@ -239,6 +273,8 @@ public class InMemoryTaskManager implements TaskManager {
             epic.removeSubId(subId);
             epicUpdate(epicId);
             historyManager.remove(subId);
+        } else {
+            throw new NotFoundException();
         }
     }
 
@@ -251,6 +287,8 @@ public class InMemoryTaskManager implements TaskManager {
             }
             epics.remove(epicId);
             historyManager.remove(epicId);
+        } else {
+            throw new NotFoundException();
         }
     }
 

@@ -6,12 +6,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
+
     protected int id;
     protected String name;
     protected String description;
     protected Status status;
     protected Duration duration;
     protected LocalDateTime startTime;
+    protected Type type = Type.TASK;
     protected static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
 
     public Task(int id, String name, String description, Status status, LocalDateTime startTime, int duration) {
@@ -91,7 +93,7 @@ public class Task {
     }
 
     public Type getType() {
-        return Type.TASK;
+        return type;
     }
 
     @Override
@@ -119,7 +121,6 @@ public class Task {
                 ", endTime=" + (getEndTime() != null ? getEndTime().format(DATE_TIME_FORMATTER) : "null") +
                 '}';
     }
-
 }
 
 
