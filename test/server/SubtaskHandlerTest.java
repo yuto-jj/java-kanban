@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SubtaskHandlerTest {
+
     String partOfURL = "http://localhost:8080/subtasks/";
     Gson gson = HttpTaskServer.getGson();
     TaskManager manager = Managers.getDefault();

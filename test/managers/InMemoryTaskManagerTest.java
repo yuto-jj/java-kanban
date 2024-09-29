@@ -61,12 +61,12 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
         int givenEpicId = 10;
         int givenSubtaskId = 15;
         Task task = new Task(givenTaskId, "Задача - 1", "Тест задачи - 1", Status.NEW,
-                LocalDateTime.of(2024, 9, 13, 11, 30), 90);
+                LocalDateTime.of(2024, 10, 13, 11, 30), 90);
         final int taskId = manager.addTask(task);
         Epic epic = new Epic(givenEpicId, "Эпик - 1", "Тест эпика - 1");
         final int epicId = manager.addEpic(epic);
         Subtask subtask = new Subtask(givenSubtaskId, "Подзадача - 1", "Тест подзадачи - 1",
-                Status.NEW, epicId, LocalDateTime.of(2024, 9, 14, 11, 30), 90);
+                Status.NEW, epicId, LocalDateTime.of(2024, 11, 14, 11, 30), 90);
         final int subId = manager.addSubtask(subtask);
 
         assertNotEquals(givenTaskId, taskId);

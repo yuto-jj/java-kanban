@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PrioritizedHandlerTest {
+    
     String url = "http://localhost:8080/prioritized/";
     Gson gson = HttpTaskServer.getGson();
     TaskManager manager = Managers.getDefault();

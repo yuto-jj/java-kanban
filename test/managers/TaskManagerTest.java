@@ -1,5 +1,7 @@
 package managers;
 
+import exceptions.NotFoundException;
+import exceptions.TimeValidationException;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Status;
@@ -126,7 +128,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(1, manager.getTasks().size());
         assertEquals(task1, manager.getTasks().getFirst());
         assertEquals(manager.getTask(t2Id), manager.getTasks().getFirst());
-        assertNull(manager.getTask(tId));
+        assertThrows(NotFoundException.class, () -> manager.getTask(tId));
     }
 
     @Test
@@ -137,7 +139,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(1, manager.getEpics().size());
         assertEquals(epic1, manager.getEpics().getFirst());
         assertEquals(manager.getEpic(e2Id), manager.getEpics().getFirst());
-        assertNull(manager.getEpic(eId));
+        assertThrows(NotFoundException.class, () -> manager.getEpic(eId));
     }
 
     @Test
@@ -149,7 +151,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(1, manager.getSubtasks().size());
         assertEquals(sub1, manager.getSubtasks().getFirst());
         assertEquals(manager.getSubtask(s1Id), manager.getSubtasks().getFirst());
-        assertNull(manager.getSubtask(sId));
+        assertThrows(NotFoundException.class, () -> manager.getSubtask(sId));
     }
 
     @Test
@@ -159,8 +161,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         manager.addTask(task1);
         manager.removeTasks();
         assertEquals(0, manager.getTasks().size());
-        assertNull(manager.getTask(task.getId()));
-        assertNull(manager.getTask(task1.getId()));
+        assertThrows(NotFoundException.class, () -> manager.getTask(task.getId()));
+        assertThrows(NotFoundException.class, () ->manager.getTask(task1.getId()));
     }
 
     @Test
@@ -169,8 +171,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         manager.addEpic(epic1);
         manager.removeEpics();
         assertEquals(0, manager.getEpics().size());
-        assertNull(manager.getEpic(epic.getId()));
-        assertNull(manager.getEpic(epic1.getId()));
+        assertThrows(NotFoundException.class, () -> manager.getEpic(epic.getId()));
+        assertThrows(NotFoundException.class, () -> manager.getEpic(epic1.getId()));
     }
 
     @Test
@@ -180,8 +182,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         manager.addSubtask(sub1);
         manager.removeSubtasks();
         assertEquals(0, manager.getSubtasks().size());
-        assertNull(manager.getSubtask(sub.getId()));
-        assertNull(manager.getSubtask(sub1.getId()));
+        assertThrows(NotFoundException.class, () -> manager.getSubtask(sub.getId()));
+        assertThrows(NotFoundException.class, () -> manager.getSubtask(sub1.getId()));
     }
 
     @Test
@@ -248,16 +250,12 @@ public abstract class TaskManagerTest<T extends TaskManager> {
                 LocalDateTime.of(2024, 9, 12, 12, 0), 90);
         Subtask sub1 = new Subtask("Подзадача - 2", "Описание - 2", eId,
                 LocalDateTime.of(2024, 9, 13, 12, 0), 90);
-        int t1Id = manager.addTask(task1);
-        int s1Id = manager.addSubtask(sub1);
 
-        assertEquals(0, t1Id);
-        assertEquals(0, s1Id);
+        assertThrows(TimeValidationException.class, () -> manager.addTask(task1));
+        assertThrows(TimeValidationException.class, () -> manager.addSubtask(sub1));
 
         assertFalse(manager.getTasks().contains(task1));
         assertFalse(manager.getSubtasks().contains(sub1));
-        assertNull(manager.getTask(t1Id));
-        assertNull(manager.getSubtask(s1Id));
         assertTrue(manager.getTasks().contains(task));
         assertTrue(manager.getSubtasks().contains(sub));
         assertNotNull(manager.getTask(tId));

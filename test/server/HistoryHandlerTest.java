@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HistoryHandlerTest {
+
     String url = "http://localhost:8080/history/";
     Gson gson = HttpTaskServer.getGson();
     TaskManager manager = Managers.getDefault();
