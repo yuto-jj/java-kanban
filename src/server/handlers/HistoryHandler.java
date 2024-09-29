@@ -7,15 +7,18 @@ import java.io.IOException;
 
 public class HistoryHandler extends BaseHttpHandler {
 
-    private final TaskManager manager;
-
     public HistoryHandler(TaskManager manager) {
-        this.manager = manager;
+        super(manager);
     }
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        String jsonHistory = gson.toJson(manager.getHistory());
-        sendText(httpExchange, jsonHistory);
+        String method = httpExchange.getRequestMethod();
+        if (!method.equals("GET")) {
+            sendBadRequest(httpExchange);
+        } else {
+            String jsonHistory = gson.toJson(manager.getHistory());
+            sendText(httpExchange, jsonHistory);
+        }
     }
 }

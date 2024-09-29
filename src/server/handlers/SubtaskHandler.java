@@ -1,5 +1,6 @@
 package server.handlers;
 
+import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import exceptions.NotFoundException;
 import exceptions.TimeValidationException;
@@ -13,10 +14,8 @@ import java.util.Optional;
 
 public class SubtaskHandler extends BaseHttpHandler {
 
-    private final TaskManager manager;
-
     public SubtaskHandler(TaskManager manager) {
-        this.manager = manager;
+        super(manager);
     }
 
     @Override
@@ -49,7 +48,17 @@ public class SubtaskHandler extends BaseHttpHandler {
             case "POST":
                 InputStream inputStream = httpExchange.getRequestBody();
                 String subtaskJson = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                Subtask subtask = gson.fromJson(subtaskJson, Subtask.class);
+                if (subtaskJson.isEmpty()) {
+                    sendBadRequest(httpExchange);
+                    break;
+                }
+                Subtask subtask;
+                try {
+                    subtask = gson.fromJson(subtaskJson, Subtask.class);
+                } catch (JsonSyntaxException e) {
+                    sendBadRequest(httpExchange);
+                    break;
+                }
                 try {
                     if (subtask.getId() == 0) {
                         manager.addSubtask(subtask);

@@ -1,5 +1,6 @@
 package server.handlers;
 
+import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import exceptions.NotFoundException;
 import managers.TaskManager;
@@ -12,10 +13,8 @@ import java.util.Optional;
 
 public class EpicHandler extends BaseHttpHandler {
 
-    private final TaskManager manager;
-
     public EpicHandler(TaskManager manager) {
-        this.manager = manager;
+        super(manager);
     }
 
     @Override
@@ -54,19 +53,29 @@ public class EpicHandler extends BaseHttpHandler {
             case "POST":
                 InputStream inputStream = httpExchange.getRequestBody();
                 String epicJson = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                Epic epic = gson.fromJson(epicJson, Epic.class);
-                    try {
-                        if (epic.getId() == 0) {
-                            manager.addEpic(epic);
-                        } else {
-                            manager.epicUpdate(epic);
-                        }
-                        httpExchange.sendResponseHeaders(201, -1);
-                        break;
-                    } catch (NotFoundException e) {
-                        sendNotFound(httpExchange);
-                        break;
+                if (epicJson.isEmpty()) {
+                    sendBadRequest(httpExchange);
+                    break;
+                }
+                Epic epic;
+                try {
+                    epic = gson.fromJson(epicJson, Epic.class);
+                } catch (JsonSyntaxException e) {
+                    sendBadRequest(httpExchange);
+                    break;
+                }
+                try {
+                    if (epic.getId() == 0) {
+                        manager.addEpic(epic);
+                    } else {
+                        manager.epicUpdate(epic);
                     }
+                    httpExchange.sendResponseHeaders(201, -1);
+                    break;
+                } catch (NotFoundException e) {
+                    sendNotFound(httpExchange);
+                    break;
+                }
             case "DELETE":
                 if (splitPath.length > 2) {
                     Optional<Integer> optId = getId(httpExchange);
